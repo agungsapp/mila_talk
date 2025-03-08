@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -46,5 +48,15 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => 'string', // Cast role sebagai string untuk enum
         ];
+    }
+
+    // public function kelasMahasiswa()
+    // {
+    //     return $this->belongsToMany(KelasMahasiswa::class, 'kelas_mahasiswas', 'id_mahasiswa', 'id_kelas');
+    // }
+
+    public function kuis(): HasMany
+    {
+        return $this->hasMany(Kuis::class, 'id_kuis');
     }
 }
