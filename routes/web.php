@@ -6,6 +6,7 @@ use App\Livewire\Kelas\KelasPage;
 use App\Livewire\Kuis\KuisCreate;
 use App\Livewire\Kuis\KuisDetail;
 use App\Livewire\Kuis\KuisPage;
+use App\Livewire\Soal\PreviewSoalPage;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
     // Route::get('kuis-create/{id}', KuisCreate::class)->name('kuis-create');
     Route::get('kuis', KuisPage::class)->name('kuis');
     Route::get('kuis-detail/{id}', KuisDetail::class)->name('kuis-detail');
+
+    Route::get('preview-soal/{id}', PreviewSoalPage::class)->name('preview-soal');
 });
 
 require __DIR__ . '/auth.php';
