@@ -22,20 +22,7 @@ class KelasResource extends JsonResource
                 'id' => $this->dosen->id,
                 'nama' => $this->dosen->name,
             ],
-            // 'mahasiswa' => $this->mahasiswa->map(function ($mhs) {
-            //     return [
-            //         'id' => $mhs->id,
-            //         'nama' => $mhs->name,
-            //     ];
-            // }),
-            // 'jumlah_mahasiswa' => $this->mahasiswa->count(),
-            // 'kuis' => $this->kuis->map(function ($kuis) {
-            //     return [
-            //         'id' => $kuis->id,
-            //         'judul' => $kuis->judul,
-            //         'deskripsi' => $kuis->deskripsi,
-            //     ];
-            // }),
+            'is_register' => $this->is_register,
         ];
     }
 }

@@ -1,10 +1,14 @@
 <?php
 
 use App\Livewire\Dashboard\DashboardPage;
+use App\Livewire\Kelas\KelasDetail;
 use App\Livewire\Kelas\KelasPage;
+use App\Livewire\Kuis\KuisCreate;
+use App\Livewire\Kuis\KuisDetail;
+use App\Livewire\Kuis\KuisPage;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::redirect('/', '/login');
 
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])
@@ -19,6 +23,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('dashboard', DashboardPage::class)->name('dashboard');
     Route::get('kelas', KelasPage::class)->name('kelas');
+    Route::get('kelas-detail/{id}', KelasDetail::class)->name('kelas-detail');
+    // Route::get('kuis-create/{id}', KuisCreate::class)->name('kuis-create');
+    Route::get('kuis', KuisPage::class)->name('kuis');
+    Route::get('kuis-detail/{id}', KuisDetail::class)->name('kuis-detail');
 });
 
 require __DIR__ . '/auth.php';

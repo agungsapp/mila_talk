@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class KelasMahasiswa extends Model
 {
     //
+
+    // protected $table = 'kelas_mahasiswas';
+
     protected $fillable = ['id_kelas', 'id_mahasiswa'];
 
     public function kelas()
