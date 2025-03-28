@@ -53,6 +53,25 @@ class KelasController extends Controller
         return response()->json(['message' => 'Berhasil mendaftar ke kelas.'], 201);
     }
 
+    /**
+     * Lihat kelas yang diikuti oleh mahasiswa yang login
+     */
+    public function myClasses(Request $request)
+    {
+        $mahasiswaId = $request->user()->id;
+        $kelas = Kelas::whereHas('mahasiswa', function ($query) use ($mahasiswaId) {
+            $query->where('users.id', $mahasiswaId);
+        })->with(['dosen', 'kuis'])->get();
+
+        // Tambah info is_register ke setiap kelas
+        $kelas = $kelas->map(function ($item) use ($mahasiswaId) {
+            $item->is_register = true; // Karena method ini hanya mengambil kelas yang sudah diikuti
+            return $item;
+        });
+
+        return KelasResource::collection($kelas);
+    }
+
 
     /**
      * Store a newly created resource in storage.

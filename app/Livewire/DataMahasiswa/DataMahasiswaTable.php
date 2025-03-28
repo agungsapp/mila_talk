@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Kuis;
+namespace App\Livewire\DataMahasiswa;
 
-use App\Models\Kuis;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -13,13 +13,14 @@ use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-final class KuisTable extends PowerGridComponent
+final class DataMahasiswaTable extends PowerGridComponent
 {
-    public string $tableName = 'kuis-table';
+    public string $tableName = 'data-mahasiswa-table-lqcxy6-table';
 
     public function setUp(): array
     {
         // $this->showCheckBox();
+
 
         return [
             PowerGrid::header()
@@ -32,7 +33,9 @@ final class KuisTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Kuis::query()->where('id_dosen', Auth::id());
+        return User::query()->whereHas('kelas' => function($q){
+            $q->where('id_dosen', Auth::id());
+        });
     }
 
     public function relationSearch(): array
@@ -43,35 +46,36 @@ final class KuisTable extends PowerGridComponent
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
-            ->add('id', fn($row, $index) => $index + 1)
-            ->add('judul')
-            ->add('deskripsi')
-            // ->add('id_kelas')
-            // ->add('id_dosen')
-            ->add('nilai_lulus')
-            ->add('created_at_formatted', fn($data) => Carbon::parse($data->created_at)->format('d-m-Y'));
+            ->add('id')
+            ->add('name')
+            ->add('email')
+            ->add('role')
+            ->add('created_at');
     }
 
     public function columns(): array
     {
         return [
             Column::make('Id', 'id'),
-            Column::make('Judul', 'judul')
+            Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Deskripsi', 'deskripsi')
+            Column::make('Email', 'email')
                 ->sortable()
                 ->searchable(),
 
-            // Column::make('Id kelas', 'id_kelas'),
-            // Column::make('Id dosen', 'id_dosen'),
-            Column::make('Nilai lulus', 'nilai_lulus')
+            Column::make('Role', 'role')
                 ->sortable()
                 ->searchable(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->sortable(),
+
+            Column::make('Created at', 'created_at')
+                ->sortable()
+                ->searchable(),
+
             Column::action('Action')
         ];
     }
@@ -87,19 +91,14 @@ final class KuisTable extends PowerGridComponent
         $this->js('alert(' . $rowId . ')');
     }
 
-    public function actions(Kuis $row): array
+    public function actions(User $row): array
     {
         return [
             Button::add('edit')
-                ->slot("<i class='bx bxs-pencil'></i> ")
+                ->slot('Edit: ' . $row->id)
                 ->id()
-                ->class('btn btn-warning')
-                ->dispatch('edit-item', ['id' => $row->id]),
-            Button::add('detail')
-                ->slot("<i class='bx bxs-info-circle'></i>")
-                ->id()
-                ->class('btn btn-success text-white')
-                ->route('kuis-detail', ['id' => $row->id]),
+                ->class('pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700 dark:ring-offset-pg-primary-800 dark:text-pg-primary-300 dark:bg-pg-primary-700')
+                ->dispatch('edit', ['rowId' => $row->id])
         ];
     }
 

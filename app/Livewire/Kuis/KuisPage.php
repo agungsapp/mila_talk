@@ -7,7 +7,7 @@ use Livewire\Component;
 class KuisPage extends Component
 {
 
-    public $context = 'kelas';
+    public $context = 'kuis';
     public $isEdit = false;
 
     public function save()

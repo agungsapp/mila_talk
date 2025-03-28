@@ -1,11 +1,9 @@
 <div class="container mt-5">
 		<div class="card shadow-lg">
-				<div class="card-header bg-info text-white">
+
+				<div class="card-body">
 						<h3 class="mb-0">Preview Soal: {{ $soal->kuis->judul }}</h3>
 						<small>Soal {{ $currentIndex + 1 }} dari {{ $allSoals->count() }}</small>
-				</div>
-				<div class="card-body">
-						<h4 class="mb-4">{{ $soal->konten['pertanyaan'] }}</h4>
 
 						@if ($soal->tipe == 'tebak_gambar')
 								<div class="mb-4 text-center">
@@ -57,6 +55,9 @@
 								</table>
 								<p class="mt-3"><strong>Kunci Jawaban:</strong> Cocok seperti di atas</p>
 						@endif
+
+						<h4 class="mb-4">{{ $soal->konten['pertanyaan'] }}</h4>
+
 				</div>
 				<div class="card-footer">
 						<div class="d-flex justify-content-between">

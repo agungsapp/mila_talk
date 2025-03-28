@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Livewire\Kuis;
+namespace App\Livewire\DataKuis;
 
 use App\Models\Kuis;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
@@ -13,9 +12,9 @@ use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-final class KuisTable extends PowerGridComponent
+final class DataKuisTable extends PowerGridComponent
 {
-    public string $tableName = 'kuis-table';
+    public string $tableName = 'data-kuis-table-xsavcn-table';
 
     public function setUp(): array
     {
@@ -32,7 +31,7 @@ final class KuisTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Kuis::query()->where('id_dosen', Auth::id());
+        return Kuis::query()->with(['dosen', 'kelas']);
     }
 
     public function relationSearch(): array
@@ -43,11 +42,11 @@ final class KuisTable extends PowerGridComponent
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
-            ->add('id', fn($row, $index) => $index + 1)
+            ->add('id')
             ->add('judul')
             ->add('deskripsi')
-            // ->add('id_kelas')
-            // ->add('id_dosen')
+            ->add('id_kelas', fn($data) => $data->kelas->nama)
+            ->add('id_dosen', fn($data) => $data->dosen->name)
             ->add('nilai_lulus')
             ->add('created_at_formatted', fn($data) => Carbon::parse($data->created_at)->format('d-m-Y'));
     }
@@ -64,14 +63,15 @@ final class KuisTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            // Column::make('Id kelas', 'id_kelas'),
-            // Column::make('Id dosen', 'id_dosen'),
-            Column::make('Nilai lulus', 'nilai_lulus')
+            Column::make('kelas', 'id_kelas'),
+            Column::make('dosen', 'id_dosen'),
+            Column::make('Nilai minimum', 'nilai_lulus')
                 ->sortable()
                 ->searchable(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->sortable(),
+
             Column::action('Action')
         ];
     }
@@ -90,11 +90,6 @@ final class KuisTable extends PowerGridComponent
     public function actions(Kuis $row): array
     {
         return [
-            Button::add('edit')
-                ->slot("<i class='bx bxs-pencil'></i> ")
-                ->id()
-                ->class('btn btn-warning')
-                ->dispatch('edit-item', ['id' => $row->id]),
             Button::add('detail')
                 ->slot("<i class='bx bxs-info-circle'></i>")
                 ->id()
