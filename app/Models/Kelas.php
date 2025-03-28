@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Kelas extends Model
 {
@@ -16,11 +17,23 @@ class Kelas extends Model
 
     public function mahasiswa()
     {
-        return $this->belongsToMany(User::class, 'kelas_mahasiswa', 'id_kelas', 'id_mahasiswa');
+        return $this->belongsToMany(User::class, 'kelas_mahasiswas', 'id_kelas', 'id_mahasiswa');
     }
+
 
     public function kuis()
     {
         return $this->hasMany(Kuis::class, 'id_kelas');
+    }
+
+    public function kelasMahasiswa(): HasMany
+    {
+        return $this->hasMany(KelasMahasiswa::class, 'id_mahasiswa');
+    }
+
+    // Accessor untuk deskripsi
+    public function getDeskripsiAttribute($value)
+    {
+        return $value ?: '-';
     }
 }
